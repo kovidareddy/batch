@@ -18,16 +18,7 @@ pipeline{
         }
         stage("deploy-dev"){
             steps{
-                sshagent(['tomcat-new']) {
-                sh """
-                    scp -o StrictHostKeyChecking=yes target/myweb.war  ec2-user@172.31.85.144:/home/ec2-user/apache-tomcat-9.0.55/webapps/
-                    
-                    ssh ec2-user@172.31.85.144 /home/ec2-user/apache-tomcat-9.0.55/bin/shutdown.sh
-                    
-                    ssh ec2-user@172.31.85.144 /home/ec2-user/apache-tomcat-9.0.55/bin/startup.sh
-                
-                """
-            }
+               deploy adapters: [tomcat9(credentialsId: 'f89a61bd-bc18-4758-b2f6-71ba2b73c4fe', path: '', url: 'http://35.200.245.149:8080/')], contextPath: 'webapps', war: 'target/*.war'
             
             }
         }
